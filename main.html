@@ -1,5 +1,62 @@
 <main>
-<button class="btn btn-success m-3">
-    Mostrar usuarios
-</button>
+    <!--Botones superiores -->
+    <div class="d-flex justify-content-center my-3">
+
+        <!-- Botones con identificadores únicos -->
+        <button type="button" id="btnMostrarInsumos" class="btn btn-success m-2" onclick="CrearTablaInsumos()">Mostrar
+            Insumos</button>
+            <button type="button" id="btnCrearInsumo" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#CrearInsumoModal">
+                Crear nuevo contacto
+            </button>
+    </div>
+
+    <!-- Tabla de insumos -->
+    <div class="container-sm mb-4 w-50 d-flex justify-content-center" id="DivInsumos"></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="CrearInsumoModal" tabindex="-1" aria-labelledby="tituloInsumomodal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloInsumomodal">Nuevo insumo</h5>
+                </div>
+
+                <!-- formulario crear contacto -->
+                <form onsubmit="insertarPrecio2023()" method="dialog" id="formulario">
+
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="Referencia" class="form-label">Introduce la referencia del insumo</label>
+                            <input type="text" class="form-control" name="Referencia" id="Referencia">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Descripción" class="form-label">Introduce la descripción del insumo</label>
+                            <input type="text" class="form-control" name="Descripción" id="Descripción">
+                        </div>
+                        <!-- NUEVO cuadro de texto para precio 2023 (con atributo readonly) -->
+                        <div class="mb-3">
+                            <label for="Precio2023" class="form-label">Introduce el precio 2023 del insumo</label>
+                            <input type="text" class="form-control" name="Precio2023" id="Precio2023">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Proveedor" class="form-label">Introduce proveedor del insumo</label>
+                            <input type="text" class="form-control" name="Proveedor" id="Proveedor">
+                        </div>
+                        <div class="mb-3">
+                            <label for="RegistroInvima" class="form-label">Introduce el registro invima del
+                                proveedor</label>
+                            <input type="text" class="form-control" name="RegistroInvima" id="RegistroInvima">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Crear insumo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </main>

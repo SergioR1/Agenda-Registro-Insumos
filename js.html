@@ -1,4 +1,119 @@
 <script>
 
-    
+    // Función para insertar un nuevo insumo
+    function insertarPrecio2023() {
+        // Obtener valores de los campos
+        let referencia = document.getElementById("Referencia").value;
+        let descripcion = document.getElementById("Descripción").value;
+        let precio = document.getElementById("Precio2023").value;
+        let proveedor = document.getElementById("Proveedor").value;
+        let RegistroInvima = document.getElementById("RegistroInvima").value;
+
+        //cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById('CrearInsumoModal')).hide();
+
+        // Desactivar el botón "Crear insumo" antes de la llamada a google.script.run
+        document.getElementById('btnCrearInsumo').disabled = true;
+
+        // Llamar a la función para agregar los datos
+        google.script.run.withSuccessHandler(function () {
+
+            // Limpiar el formulario después de que los datos se hayan insertado correctamente
+            document.getElementById("Referencia").value = '';
+            document.getElementById("Descripción").value = '';
+            document.getElementById("Precio2023").value = '';
+            document.getElementById("Proveedor").value = '';
+            document.getElementById("RegistroInvima").value = '';
+
+            // Volver a crear la tabla de insumos actualizada
+            CrearTablaInsumos();
+            
+            // Habilitar el botón "Crear insumo" después de completar la operación
+            document.getElementById('btnCrearInsumo').disabled = false;
+        })
+            .insertarInsumo(referencia, descripcion, precio, proveedor, RegistroInvima);
+    }
+
+
+
+    function CrearTablaInsumos() {
+        // Eliminamos la tabla si existe
+        eliminarTabla();
+
+        // Desactivar los botones mientras se carga la tabla
+        document.getElementById('btnMostrarInsumos').disabled = true;
+        document.getElementById('btnCrearInsumo').disabled = true;
+
+        // Crear loader
+        crearLoader('DivInsumos');
+
+        google.script.run.withSuccessHandler(function (obj) {
+            tabla = document.createElement('table');
+            tabla.id = 'tablainsumos';
+
+            let tablaHeader = document.createElement('thead');
+            let tablaBody = document.createElement('tbody');
+
+            // Header de la tabla
+            let primeraFila = document.createElement('tr');
+            for (let i = 0; i < obj[0].length; i++) {
+                let celda = document.createElement('td');
+                celda.textContent = obj[0][i];
+                primeraFila.appendChild(celda);
+            }
+            tablaHeader.appendChild(primeraFila);
+            tabla.appendChild(tablaHeader);
+
+            // Body de la tabla
+            for (let i = 1; i < obj.length; i++) {
+                let fila = document.createElement('tr');
+                for (let j = 0; j < obj[i].length; j++) {
+                    let celda = document.createElement('td');
+                    celda.textContent = obj[i][j];
+                    fila.appendChild(celda);
+                }
+                tablaBody.appendChild(fila);
+            }
+
+            // Agregamos clases a la cabecera
+            tablaHeader.classList.add('table-dark');
+            // Agregamos el cuerpo a la tabla
+            tabla.appendChild(tablaBody);
+            // Agregamos clases a la tabla
+            tabla.classList.add('table', 'table-striped', 'border', 'border-4', 'table-hover', 'border-dark');
+            // Agregamos tabla a la pagina
+            document.getElementById('DivInsumos').appendChild(tabla);
+
+            // Eliminar el loader
+            eliminarLoader();
+
+            // Habilitar los botones nuevamente después de cargar la tabla
+            document.getElementById('btnMostrarInsumos').disabled = false;
+            document.getElementById('btnCrearInsumo').disabled = false;
+
+        }).obtenerInsumos();
+    }
+
+    function crearLoader(elementoPadre) {
+        eliminarLoader();
+        let loader = document.createElement('div');
+        loader.id = 'loader';
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.classList.add('lds-ellipsis');
+        document.getElementById(elementoPadre).appendChild(loader);
+    }
+
+    function eliminarLoader() {
+        let loader = document.getElementById('loader');
+        if (loader) loader.remove();
+    }
+
+    function eliminarTabla() {
+        let tabla = document.getElementById('tablainsumos');
+        if (tabla) tabla.remove();
+    }
+
 </script>

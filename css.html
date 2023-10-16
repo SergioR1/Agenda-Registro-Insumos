@@ -6,8 +6,87 @@
 <style>
 header
 {
-    background-color: aquamarine;
+    background-color:skyblue;
 }
 
+/* LOADER */
 
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: skyblue;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+    .notificacion-exito .toast-header {
+        background-color: #28a745; /* Fondo verde para notificación de éxito */
+    }
+
+    .notificacion-exito .toast-header strong {
+        color: #fff; /* Texto blanco para el título de éxito */
+    }
+
+    .notificacion-exito .toast-body {
+        color: #28a745; /* Texto verde para el cuerpo de éxito */
+    }
+
+    .notificacion-error .toast-header {
+        background-color: #dc3545; /* Fondo rojo para notificación de error */
+    }
+
+    .notificacion-error .toast-header strong {
+        color: #fff; /* Texto blanco para el título de error */
+    }
+
+    .notificacion-error .toast-body {
+        color: #dc3545; /* Texto rojo para el cuerpo de error */
+    }
 </style>
