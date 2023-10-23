@@ -19,3 +19,14 @@ function obtenerInsumos() {
 function insertarInsumo(Referencia, Descripción, Precio2023, Proveedor, RegistroInvima) {
     HOJA.appendRow([Referencia, Descripción, Precio2023, Proveedor, RegistroInvima]);
 }
+
+function borrarInsumo(numFila)
+{
+    HOJA.deleteRow(numFila);
+}
+
+function modificarInsumo(numFila,datos)
+{
+    let celdas = HOJA.getRange('A'+numFila+':E'+numFila);
+    celdas.setValues([[datos.Referencia, datos.Descripción, datos.Precio2023, datos.Proveedor, datos.RegistroInvima]]);
+}

@@ -1,12 +1,31 @@
 <script>
 
+    //boton subir
+    window.addEventListener('scroll', function()
+    {
+        if(this.window.scrollY  > 500 ) 
+        {
+            document.getElementById('botonSubir').style.transform = "scale(1)";
+        }
+        if(this.window.scrollY  < 500 ) 
+        {
+            document.getElementById('botonSubir').style.transform = "scale(0)";
+        }
+    });
+
+    function subirArriba()
+    {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
     // Función para insertar un nuevo insumo
     function insertarPrecio2023() {
         // Obtener valores de los campos
-        let referencia = document.getElementById("Referencia").value;
-        let descripcion = document.getElementById("Descripción").value;
-        let precio = document.getElementById("Precio2023").value;
-        let proveedor = document.getElementById("Proveedor").value;
+        let Referencia = document.getElementById("Referencia").value;
+        let Descripción = document.getElementById("Descripción").value;
+        let Precio2023 = document.getElementById("Precio2023").value;
+        let Proveedor = document.getElementById("Proveedor").value;
         let RegistroInvima = document.getElementById("RegistroInvima").value;
 
         //cerrar modal
@@ -27,11 +46,11 @@
 
             // Volver a crear la tabla de insumos actualizada
             CrearTablaInsumos();
-            
+
             // Habilitar el botón "Crear insumo" después de completar la operación
             document.getElementById('btnCrearInsumo').disabled = false;
         })
-            .insertarInsumo(referencia, descripcion, precio, proveedor, RegistroInvima);
+            .insertarInsumo(Referencia, Descripción, Precio2023, Proveedor, RegistroInvima);
     }
 
 
@@ -61,8 +80,18 @@
                 celda.textContent = obj[0][i];
                 primeraFila.appendChild(celda);
             }
+
+            //agregar a columna opciones
+            let celdaOpciones = document.createElement("td");
+            celdaOpciones.textContent = "OPCIONES";
+            celdaOpciones.classList.add('text-center');
+            primeraFila.appendChild(celdaOpciones);
+
+            //agregar la fila al header de la table
             tablaHeader.appendChild(primeraFila);
             tabla.appendChild(tablaHeader);
+
+
 
             // Body de la tabla
             for (let i = 1; i < obj.length; i++) {
@@ -72,6 +101,9 @@
                     celda.textContent = obj[i][j];
                     fila.appendChild(celda);
                 }
+                //agreegar botones a la fila
+                crearCeldaBotones(i + 1);
+                fila.appendChild(crearCeldaBotones(i + 1, obj[i]));
                 tablaBody.appendChild(fila);
             }
 
@@ -93,6 +125,146 @@
 
         }).obtenerInsumos();
     }
+
+    function crearCeldaBotones(numFila, datosInsumo) {
+        //crear celda
+        let celda = document.createElement("td");
+        celda.classList.add('text-center');
+
+        // Crear contenedor para los botones
+        let botonContainer = document.createElement('div');
+        botonContainer.classList.add('btn-container');
+
+        //crear boton borrar
+        let botonBorrar = document.createElement('button');
+        botonBorrar.onclick = () => borrarInsumo(numFila);
+        botonBorrar.classList.add('btn', 'btn-danger', 'm-1');
+        botonBorrar.setAttribute('title', 'Borrar Insumo');
+
+        //Crear icono borrar
+        let iconoBorrar = document.createElement('i');
+        iconoBorrar.classList.add('bi', 'bi-trash');
+        botonBorrar.appendChild(iconoBorrar);
+
+
+        //crear boton modificar
+        let botonModificar = document.createElement('button');
+        botonModificar.onclick = () => abrirModalModificarInsumo(numFila, datosInsumo);
+        botonModificar.classList.add('btn', 'btn-warning', 'm-1');
+        botonModificar.setAttribute('title', 'Modificar Insumo');
+
+        //Crear icono modificar
+        let iconoModificar = document.createElement('i');
+        iconoModificar.classList.add('bi', 'bi-pencil-square');
+        botonModificar.appendChild(iconoModificar);
+
+        //agregar botones a las celdas
+        celda.appendChild(botonBorrar);
+        celda.appendChild(botonModificar);
+
+        // Agregar botones al contenedor
+        botonContainer.appendChild(botonBorrar);
+        botonContainer.appendChild(botonModificar);
+
+        // Agregar el contenedor de botones a la celda
+        celda.appendChild(botonContainer);
+
+        return celda;
+    }
+
+    function abrirModalCrearInsumo() {
+        //boton crear
+        let boton = document.getElementById('botonCrearModificar');
+        boton.textContent = "crear Insumo";
+        boton.classList = '';
+        boton.classList.add('btn', 'btn-success');
+
+        //cambiar titulo
+        document.getElementById('titulomodal').textContent = 'Crear insumo';
+
+        //modificar submit
+        document.getElementById('formulario').onsubmit = () => insertarPrecio2023();
+
+        //obtener datos
+        document.getElementById('Referencia').value = '';
+        document.getElementById('Descripción').value = '';
+        document.getElementById('Precio2023').value = '';
+        document.getElementById('Proveedor').value = '';
+        document.getElementById('RegistroInvima').value = '';
+
+        //abrir modal
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('CrearInsumoModal')).show();
+    }
+
+    function abrirModalModificarInsumo(numFila, datosInsumo) {
+        //boton modificar
+        let boton = document.getElementById('botonCrearModificar');
+        boton.textContent = "Modificar Insumo";
+        boton.classList = '';
+        boton.classList.add('btn', 'btn-warning');
+
+        //cambiar titulo
+        document.getElementById('titulomodal').textContent = 'modificar insumo';
+
+        //modificar submit
+        document.getElementById('formulario').onsubmit = () => modificarInsumo(numFila);
+
+        //obtener datos
+        document.getElementById('Referencia').value = datosInsumo[0];
+        document.getElementById('Descripción').value = datosInsumo[1];
+        document.getElementById('Precio2023').value = datosInsumo[2];
+        document.getElementById('Proveedor').value = datosInsumo[3];
+        document.getElementById('RegistroInvima').value = datosInsumo[4];
+
+        //abrir modal
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('CrearInsumoModal')).show();
+    }
+
+    function modificarInsumo(numFila) {
+        // Cerrar el modal
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('CrearInsumoModal')).hide();
+
+        // Obtener nuevos datos a partir del formulario
+        let Referencia = document.getElementById("Referencia").value;
+        let Descripción = document.getElementById("Descripción").value;
+        let Precio2023 = document.getElementById("Precio2023").value;
+        let Proveedor = document.getElementById("Proveedor").value;
+        let RegistroInvima = document.getElementById("RegistroInvima").value;
+
+        // Eliminamos la tabla si existe
+        eliminarTabla();
+
+        // Crear loader inmediatamente
+        crearLoader('DivInsumos');
+
+        google.script.run.withSuccessHandler(function () {
+            // Insumo modificado con éxito, ahora recargamos la tabla
+            eliminarLoader(); // Eliminar el loader antes de volver a cargar la tabla
+            CrearTablaInsumos(); // Volver a cargar la tabla
+
+        }).modificarInsumo(numFila, {Referencia, Descripción, Precio2023, Proveedor, RegistroInvima});
+    }
+
+
+    function borrarInsumo(numFila) {
+        // Eliminamos la tabla si existe
+        eliminarTabla();
+
+        // Crear loader inmediatamente
+        crearLoader('DivInsumos');
+
+        google.script.run.withSuccessHandler(function () {
+            // Insumo borrado con éxito, ahora recargamos la tabla
+            eliminarLoader(); // Eliminar el loader antes de volver a cargar la tabla
+            CrearTablaInsumos(); // Volver a cargar la tabla
+
+            // Habilitar los botones nuevamente después de cargar la tabla
+            document.getElementById('btnMostrarInsumos').disabled = false;
+            document.getElementById('btnCrearInsumo').disabled = false;
+        }).borrarInsumo(numFila);
+    }
+
+
 
     function crearLoader(elementoPadre) {
         eliminarLoader();
